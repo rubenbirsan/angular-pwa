@@ -1,0 +1,62 @@
+<form (ngSubmit)="onSubmit()" #bookForm="ngForm">
+  <div class="row" style="padding: 10px">
+    <mat-form-field style="padding-left: 10px; width: 30%">
+      <input
+        matInput
+        placeholder="ISBN"
+        name="isbn"
+        [(ngModel)]="book.isbn"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field style="padding-left: 10px; width: 30%">
+      <input
+        matInput
+        placeholder="Titele"
+        name="title"
+        [(ngModel)]="book.title"
+        required
+      />
+    </mat-form-field>
+  </div>
+  <div class="row" style="padding: 10px">
+    <mat-form-field style="padding-left: 10px; width: 30%">
+      <input
+        matInput
+        placeholder="Published Date"
+        name="published"
+        [(ngModel)]="book.published"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field style="padding-left: 10px; width: 30%">
+      <input
+        matInput
+        placeholder="Preis"
+        name="price"
+        [(ngModel)]="book.price"
+        required
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="row" style="width: 60%">
+    <mat-form-field style="padding-left: 20px; width: 50%">
+      <input
+        matInput
+        placeholder="Rating"
+        name="rating"
+        [(ngModel)]="book.rating"
+        required
+      />
+    </mat-form-field>
+    <button
+      style="float: right"
+      mat-raised-button
+      color="primary"
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
