@@ -1,6 +1,6 @@
 // DEV Webpack configuration used to build the service worker
 const path = require("path");
-const webBuildTargetFolder = path.join(__dirname, "..", "dist", "apps", "web");
+const webBuildTargetFolder = path.join(__dirname, "..", "workbox", "config");
 const targetServiceWorkerFilename = "service-worker.js";
 module.exports = {
   target: "node",
