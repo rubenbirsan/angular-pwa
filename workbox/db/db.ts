@@ -38,18 +38,19 @@ export class AppDB extends Dexie {
   }
 
   addBookRequest = async (requestUrl: string, book: Book, method: string) => {
-    console.log('Add book to dexieList');
-    await requestsDatabase.bookRequests.add({
-      isbn: book.isbn,
-      method: method,
-      title: book.title,
-      published: book.published,
-      price: book.price,
-      rating: book.rating,
-      requestUrl: requestUrl,
-      requestCompleted: false,
-      requestInitiated: false,
-    });
+    for (let i = 0; i < 100000; i++) {
+      await requestsDatabase.bookRequests.add({
+        isbn: book.isbn + i,
+        method: method,
+        title: book.title,
+        published: book.published,
+        price: book.price,
+        rating: book.rating,
+        requestUrl: requestUrl,
+        requestCompleted: false,
+        requestInitiated: false,
+      });
+    }
   };
 
   async getBookRequestByIsbn(isbn: string) {
