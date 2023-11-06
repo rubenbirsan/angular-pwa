@@ -31,9 +31,11 @@ export class AppComponent {
     private restApiService: RestApiService,
     private restApiService1: RestApiService
   ) {
-    navigator.storage.persist();
-
     this.initStoragePersistence().then();
+
+    navigator.storage.persist().then((persisted) => {
+      console.log('Storage persisted: ', persisted);
+    });
 
     localStorage.setItem('token', this.generateRandomName(20));
     localStorage.setItem('isOnline', 'false');
@@ -94,6 +96,8 @@ export class AppComponent {
   }
 
   getIndexedDbItems() {
+    this.dataToDisplay = 'Loading Data form IndexedDb...';
+
     setTimeout(() => {
       this.restApiService.getIndexedDbItems().subscribe((res) => {
         this.dataToDisplay = 'Data form IndexedDb: ' + res.length;
@@ -154,13 +158,14 @@ export class AppComponent {
   }
 
   async showEstimatedQuota() {
+    this.dataToDisplay = 'Loading quota...';
     if (navigator.storage && navigator.storage.estimate) {
       const estimation = await navigator.storage.estimate();
       console.log(`Quota: ${estimation.quota}`);
       console.log(`Usage: ${estimation.usage}`);
       this.dataToDisplay =
-        `Quota: ${estimation.quota / 1024 / 1024} MB` +
-        `, Usage: ${estimation.usage / 1024 / 1024} MB`;
+        `Quota: ${(estimation.quota / 1000 / 1000).toFixed(1)} MB` +
+        `, Usage: ${(estimation.usage / 1000 / 1000).toFixed(1)} MB`;
     } else {
       console.error('StorageManager not found');
     }
