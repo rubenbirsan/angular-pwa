@@ -309,7 +309,7 @@ registerRoute(
     plugins: [
       {
         cachedResponseWillBeUsed: async () => {
-          var data = await requestsDatabase.listBookRequests();
+          var data = await requestsDatabase.countBookRequests();
           const response = new Response(JSON.stringify(data), {
             headers: {
               'Content-Type': 'application/json',

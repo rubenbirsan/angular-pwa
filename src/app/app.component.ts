@@ -100,8 +100,7 @@ export class AppComponent {
 
     setTimeout(() => {
       this.restApiService.getIndexedDbItems().subscribe((res) => {
-        this.dataToDisplay = 'Data form IndexedDb: ' + res.length;
-        console.log('Data form IndexedDb: ', res);
+        this.dataToDisplay = 'Data form IndexedDb: ' + res;
       });
     }, 10);
   }
@@ -164,8 +163,8 @@ export class AppComponent {
       console.log(`Quota: ${estimation.quota}`);
       console.log(`Usage: ${estimation.usage}`);
       this.dataToDisplay =
-        `Quota: ${(estimation.quota / 1000 / 1000).toFixed(1)} MB` +
-        `, Usage: ${(estimation.usage / 1000 / 1000).toFixed(1)} MB`;
+        `Quota: ${(estimation.quota / 1024 / 1024).toFixed(1)} MB` +
+        `, Usage: ${(estimation.usage / 1024 / 1024).toFixed(1)} MB`;
     } else {
       console.error('StorageManager not found');
     }

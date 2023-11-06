@@ -96,6 +96,10 @@ export class AppDB extends Dexie {
     return await requestsDatabase.bookRequests.toArray();
   }
 
+  async countBookRequests() {
+    return await requestsDatabase.bookRequests.count();
+  }
+
   async deleteBookRequest(key: number) {
     return await requestsDatabase.bookRequests.delete(key);
   }
