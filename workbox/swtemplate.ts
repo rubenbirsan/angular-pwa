@@ -243,7 +243,28 @@ const bgGetPlugin = {
     return request;
   },
   fetchDidFail: async ({ originalRequest, request, error, event, state }) => {
-    console.log('Get Books failed');
+    try {
+      const response = await fetch(request.clone());
+
+      return response;
+    } catch (error) {
+      const requestBody = await request.text();
+      const book = JSON.parse(requestBody) as Book;
+      const urlToRetrieve = 'https://api.angular.schule/books/' + Date.now();
+
+      caches.open('books' + Date.now()).then(function (cache) {
+        let books: Book[] = [];
+        books.push(book);
+        cache
+          .put(urlToRetrieve, new Response(JSON.stringify(books)))
+          .then(function () {})
+          .catch(function (error) {
+            // Handle any errors here
+          });
+      });
+
+      return error;
+    }
   },
   fetchDidSucceed: async ({ request, response, event, state }) => {
     // Return `response` to use the network response as-is,
