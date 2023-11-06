@@ -31,7 +31,7 @@ export class AppComponent {
     private restApiService: RestApiService,
     private restApiService1: RestApiService
   ) {
-    this.initStoragePersistence().then();
+    this.initStoragePersistence();
 
     navigator.storage.persist().then((persisted) => {
       console.log('Storage persisted: ', persisted);
@@ -126,8 +126,8 @@ export class AppComponent {
   }
 
   async tryPersistWithoutPromtingUser() {
-    console.log(navigator);
-    console.log(navigator.permissions);
+    console.log('Navigator: ', navigator);
+    console.log('Permissions: ', navigator.permissions);
 
     if (!navigator.storage || !navigator.storage.persisted) {
       return 'never';
@@ -156,32 +156,36 @@ export class AppComponent {
     return 'never';
   }
 
-  async showEstimatedQuota() {
+  showEstimatedQuota() {
     this.dataToDisplay = 'Loading quota...';
+    console.log('Storage: ', navigator.storage);
     if (navigator.storage && navigator.storage.estimate) {
-      const estimation = await navigator.storage.estimate();
-      console.log(`Quota: ${estimation.quota}`);
-      console.log(`Usage: ${estimation.usage}`);
-      this.dataToDisplay =
-        `Quota: ${(estimation.quota / 1024 / 1024).toFixed(1)} MB` +
-        `, Usage: ${(estimation.usage / 1024 / 1024).toFixed(1)} MB`;
+      navigator.storage.estimate().then((estimation) => {
+        console.log(`Quota: ${estimation.quota}`);
+        console.log(`Usage: ${estimation.usage}`);
+        this.dataToDisplay =
+          `Quota: ${(estimation.quota / 1024 / 1024).toFixed(1)} MB` +
+          `, Usage: ${(estimation.usage / 1024 / 1024).toFixed(1)} MB`;
+      });
     } else {
+      this.dataToDisplay = 'StorageManager not found';
       console.error('StorageManager not found');
     }
   }
 
-  async initStoragePersistence() {
-    const persist = await this.tryPersistWithoutPromtingUser();
-    switch (persist) {
-      case 'never':
-        console.log('Not possible to persist storage');
-        break;
-      case 'persisted':
-        console.log('Successfully persisted storage silently');
-        break;
-      case 'prompt':
-        console.log('Not persisted, but we may prompt user when we want to.');
-        break;
-    }
+  initStoragePersistence() {
+    this.tryPersistWithoutPromtingUser().then((persist) => {
+      switch (persist) {
+        case 'never':
+          console.log('Not possible to persist storage');
+          break;
+        case 'persisted':
+          console.log('Successfully persisted storage silently');
+          break;
+        case 'prompt':
+          console.log('Not persisted, but we may prompt user when we want to.');
+          break;
+      }
+    });
   }
 }

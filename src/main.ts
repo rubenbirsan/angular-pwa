@@ -46,16 +46,16 @@ function loadServiceWorker() {
           new Date().getMilliseconds()
         );
 
-        if (event.isUpdate) {
-          this.confirmationService.confirm({
-            key: 'session',
-            message: `New version is available!. Click OK to refresh.`,
-            acceptLabel: 'OK',
-            accept: () => {
-              this.windowRef.getNativeWindow().location.reload();
-            },
-          });
-        }
+        // if (event.isUpdate) {
+        //   this.confirmationService.confirm({
+        //     key: 'session',
+        //     message: `New version is available!. Click OK to refresh.`,
+        //     acceptLabel: 'OK',
+        //     accept: () => {
+        //       this.windowRef.getNativeWindow().location.reload();
+        //     },
+        //   });
+        // }
       });
     });
   }
