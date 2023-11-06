@@ -30,6 +30,8 @@ export class AppComponent {
     private restApiService: RestApiService,
     private restApiService1: RestApiService
   ) {
+    navigator.storage.persist();
+
     localStorage.setItem('token', this.generateRandomName(20));
     localStorage.setItem('isOnline', 'false');
     localStorage.setItem('loadBooks', 'false');
@@ -114,5 +116,58 @@ export class AppComponent {
     setTimeout(() => {
       this.loadBooks();
     }, 500);
+  }
+
+  async tryPersistWithoutPromtingUser() {
+    if (!navigator.storage || !navigator.storage.persisted) {
+      return 'never';
+    }
+    let persisted = await navigator.storage.persisted();
+    if (persisted) {
+      return 'persisted';
+    }
+    if (!navigator.permissions || !navigator.permissions.query) {
+      return 'prompt'; // It MAY be successful to prompt. Don't know.
+    }
+    const permission = await navigator.permissions.query({
+      name: 'persistent-storage',
+    });
+    if (permission.state === 'granted') {
+      persisted = await navigator.storage.persist();
+      if (persisted) {
+        return 'persisted';
+      } else {
+        throw new Error('Failed to persist');
+      }
+    }
+    if (permission.state === 'prompt') {
+      return 'prompt';
+    }
+    return 'never';
+  }
+
+  async showEstimatedQuota() {
+    if (navigator.storage && navigator.storage.estimate) {
+      const estimation = await navigator.storage.estimate();
+      console.log(`Quota: ${estimation.quota}`);
+      console.log(`Usage: ${estimation.usage}`);
+    } else {
+      console.error('StorageManager not found');
+    }
+  }
+
+  async initStoragePersistence() {
+    const persist = await this.tryPersistWithoutPromtingUser();
+    switch (persist) {
+      case 'never':
+        console.log('Not possible to persist storage');
+        break;
+      case 'persisted':
+        console.log('Successfully persisted storage silently');
+        break;
+      case 'prompt':
+        console.log('Not persisted, but we may prompt user when we want to.');
+        break;
+    }
   }
 }
