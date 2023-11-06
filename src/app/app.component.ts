@@ -30,7 +30,7 @@ export class AppComponent {
     private restApiService: RestApiService,
     private restApiService1: RestApiService
   ) {
-    navigator.storage.persist();
+    this.initStoragePersistence().then();
 
     localStorage.setItem('token', this.generateRandomName(20));
     localStorage.setItem('isOnline', 'false');
