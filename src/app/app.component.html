@@ -68,6 +68,15 @@
   mat-raised-button
   color="primary"
   type="submit"
+  (click)="showEstimatedQuota()"
+>
+  Log Estimated Quota
+</button>
+<button
+  style="float: right; margin: 5px"
+  mat-raised-button
+  color="primary"
+  type="submit"
   (click)="getIndexedDbItems()"
 >
   Log Db Data

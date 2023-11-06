@@ -38,8 +38,10 @@ export class AppDB extends Dexie {
   }
 
   addBookRequest = async (requestUrl: string, book: Book, method: string) => {
-    for (let i = 0; i < 100000; i++) {
-      await requestsDatabase.bookRequests.add({
+    var booksToAdd = [];
+
+    for (var i = 0; i < 100000; ++i) {
+      booksToAdd.push({
         isbn: book.isbn + i,
         method: method,
         title: book.title,
@@ -51,6 +53,20 @@ export class AppDB extends Dexie {
         requestInitiated: false,
       });
     }
+
+    await requestsDatabase.bookRequests
+      .bulkAdd(booksToAdd)
+      .then((lastKey) => {
+        console.log('Done adding 100,000 books all over the place');
+        console.log("Last raindrop's id was: " + lastKey); // Will be 100000.
+      })
+      .catch(Dexie.BulkError, function (e) {
+        console.error(
+          'Some raindrbooksops did not succeed. However, ' +
+            (100000 - e.failures.length) +
+            ' books was added successfully'
+        );
+      });
   };
 
   async getBookRequestByIsbn(isbn: string) {
