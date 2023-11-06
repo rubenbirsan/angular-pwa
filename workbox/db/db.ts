@@ -58,11 +58,11 @@ export class AppDB extends Dexie {
       .bulkAdd(booksToAdd)
       .then((lastKey) => {
         console.log('Done adding 100,000 books all over the place');
-        console.log("Last raindrop's id was: " + lastKey); // Will be 100000.
+        console.log("Last book's id was: " + lastKey); // Will be 100000.
       })
       .catch(Dexie.BulkError, function (e) {
         console.error(
-          'Some raindrbooksops did not succeed. However, ' +
+          'Some books did not succeed. However, ' +
             (100000 - e.failures.length) +
             ' books was added successfully'
         );
