@@ -67,7 +67,7 @@ setInterval(async () => {
     syncPendingRequests();
   }
 
-  if ((await requestsDatabase.listPendingBookRequests()).length > 0) {
+  if ((await requestsDatabase.listPendingBookRequests()).length === 0) {
     syncIsPending$.next(false);
   }
 }, 5000);
@@ -90,7 +90,6 @@ const syncPendingRequests = async () => {
     console.log('Offline saved books found: ', itemsForRequest.length);
     itemsForRequest.forEach((book, index) => {
       setTimeout(async () => {
-        console.log('SendRequest for book:', book);
         await requestsDatabase.setBookRequestInitiated(book.id, true);
         fetch(book.requestUrl + (book.method == 'PUT' ? '/' + book.isbn : ''), {
           method: book.method,
