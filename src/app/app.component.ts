@@ -100,7 +100,7 @@ export class AppComponent {
 
     setTimeout(() => {
       this.restApiService.getIndexedDbItems().subscribe((res) => {
-        this.dataToDisplay = 'Data form IndexedDb: ' + res;
+        this.dataToDisplay = 'Data form IndexedDb: ' + res.length;
       });
     }, 10);
   }
