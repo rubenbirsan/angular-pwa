@@ -159,7 +159,8 @@ export class AppComponent {
   showEstimatedQuota() {
     this.dataToDisplay = 'Loading quota...';
     console.log('Storage: ', navigator.storage);
-    if (navigator.storage && navigator.storage.estimate) {
+    console.log('Estimate: ', navigator.storage.estimate);
+    if (navigator.storage) {
       navigator.storage.estimate().then((estimation) => {
         console.log(`Quota: ${estimation.quota}`);
         console.log(`Usage: ${estimation.usage}`);
