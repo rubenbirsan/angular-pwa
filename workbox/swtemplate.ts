@@ -67,9 +67,9 @@ setInterval(async () => {
     syncPendingRequests();
   }
 
-  if ((await requestsDatabase.listPendingBookRequests()).length === 0) {
-    syncIsPending$.next(false);
-  }
+  // if ((await requestsDatabase.listPendingBookRequests()).length === 0) {
+  //   syncIsPending$.next(false);
+  // }
 }, 5000);
 
 setInterval(async () => {
@@ -86,6 +86,7 @@ const syncPendingRequests = async () => {
   var itemsForRequest = await requestsDatabase.listPendingBookRequests();
   if (itemsForRequest.length == 0) {
     console.log('No offline saved books found');
+    syncIsPending$.next(false);
   } else {
     console.log('Offline saved books found: ', itemsForRequest.length);
     itemsForRequest.forEach((book, index) => {
@@ -103,6 +104,7 @@ const syncPendingRequests = async () => {
               await requestsDatabase.setBookRequestInitiated(book.id, false);
 
               if (index === itemsForRequest.length - 1) {
+                syncIsPending$.next(false);
                 await sendMessageToClient('loadBooks');
               }
               throw new Error('Network response was not ok');
