@@ -104,18 +104,20 @@ const syncPendingRequests = async () => {
               await requestsDatabase.setBookRequestInitiated(book.id, false);
 
               if (index === itemsForRequest.length - 1) {
-                syncIsPending$.next(false);
                 await sendMessageToClient('loadBooks');
+                syncIsPending$.next(false);
               }
               throw new Error('Network response was not ok');
             }
             if (index === itemsForRequest.length - 1) {
+              syncIsPending$.next(false);
               await sendMessageToClient('loadBooks');
             }
             return response.json();
           })
           .then(async (data) => {
             if (index === itemsForRequest.length - 1) {
+              syncIsPending$.next(false);
               await sendMessageToClient('loadBooks');
             }
             await requestsDatabase.deleteBookRequest(book.id);
