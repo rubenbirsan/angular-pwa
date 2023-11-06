@@ -244,24 +244,36 @@ const bgGetPlugin = {
   },
   fetchDidFail: async ({ originalRequest, request, error, event, state }) => {
     try {
-      const response = await fetch(request.clone());
+      var date = new Date();
+      const urlToRetrieve = 'https://api.angular.schule/books/' + date;
 
-      return response;
-    } catch (error) {
-      const requestBody = await request.text();
-      const book = JSON.parse(requestBody) as Book;
-      const urlToRetrieve = 'https://api.angular.schule/books/' + Date.now();
+      let books: Book[] = [];
 
-      caches.open('books' + Date.now()).then(function (cache) {
-        let books: Book[] = [];
-        books.push(book);
+      for (let i = 0; i < 10000; i++) {
+        books.push({
+          isbn: '9783864905521' + i,
+          title: 'React1',
+          published: new Date(),
+          price: 22,
+          addedOffline: true,
+          rating: 2,
+        });
+      }
+
+      console.log('Books to add in cache: ', books.length);
+
+      caches.open('books' + date).then(function (cache) {
         cache
           .put(urlToRetrieve, new Response(JSON.stringify(books)))
-          .then(function () {})
+          .then(function () {
+            console.log('Success - Books added in Cache');
+          })
           .catch(function (error) {
-            // Handle any errors here
+            console.log('Fail1', ' -  Books added in Cache', error);
           });
       });
+    } catch (error) {
+      console.log('Fail2', ' -  Books added in Cache', error);
 
       return error;
     }
