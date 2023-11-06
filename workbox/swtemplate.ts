@@ -251,6 +251,7 @@ const bgPostPlugin = {
 
     // queue.pushRequest({ request: event.request });
 
+    appIsOnline$.next(false);
     console.log('Add book failed');
   },
   fetchDidSucceed: async ({ request, response, event, state }) => {
