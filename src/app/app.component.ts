@@ -26,7 +26,10 @@ export class AppComponent {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
   isOnline: boolean = false;
-  constructor(private restApiService: RestApiService) {
+  constructor(
+    private restApiService: RestApiService,
+    private restApiService1: RestApiService
+  ) {
     localStorage.setItem('token', this.generateRandomName(20));
     localStorage.setItem('isOnline', 'false');
     localStorage.setItem('loadBooks', 'false');

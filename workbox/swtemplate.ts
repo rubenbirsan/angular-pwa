@@ -61,7 +61,8 @@ const checkOnlineStatus = async () => {
 setInterval(async () => {
   if (
     appIsOnline$.value &&
-    (await requestsDatabase.listPendingBookRequests()).length > 0
+    (await requestsDatabase.listPendingBookRequests()).length > 0 &&
+    syncIsPending$.value === false
   ) {
     syncPendingRequests();
   }
@@ -104,12 +105,14 @@ const syncPendingRequests = async () => {
               if (index === itemsForRequest.length - 1) {
                 await sendMessageToClient('loadBooks');
                 syncIsPending$.next(false);
+                console.log('Sync Completed');
               }
               throw new Error('Network response was not ok');
             }
             if (index === itemsForRequest.length - 1) {
               await sendMessageToClient('loadBooks');
               syncIsPending$.next(false);
+              console.log('Sync Completed');
             }
             return response.json();
           })
@@ -117,9 +120,9 @@ const syncPendingRequests = async () => {
             if (index === itemsForRequest.length - 1) {
               await sendMessageToClient('loadBooks');
               syncIsPending$.next(false);
+              console.log('Sync Completed');
             }
             await requestsDatabase.deleteBookRequest(book.id);
-            console.log('Data sent successfully:', data);
           })
           .catch(async (error) => {
             await requestsDatabase.setBookRequestInitiated(book.id, false);
@@ -127,6 +130,7 @@ const syncPendingRequests = async () => {
             if (index === itemsForRequest.length - 1) {
               await sendMessageToClient('loadBooks');
               syncIsPending$.next(false);
+              console.log('Sync Completed');
             }
             console.error('Error: ', error);
           });
@@ -273,6 +277,7 @@ const bgPostPlugin = {
   },
   handlerDidError: async ({ request, event, error, state }) => {
     // Return a `Response` to use as a fallback, or `null`.
+
     return null;
   },
 };
@@ -287,6 +292,12 @@ registerRoute(
 
 registerRoute(
   ({ url }) => url.pathname.endsWith('/books'),
+  new NetworkOnly({ plugins: [bgPostPlugin, cacheStorageUpdatePlugin] }),
+  'POST'
+);
+
+registerRoute(
+  ({ url }) => url.pathname.endsWith('/items'),
   new NetworkOnly({ plugins: [bgPostPlugin, cacheStorageUpdatePlugin] }),
   'POST'
 );
