@@ -64,7 +64,7 @@ setInterval(async () => {
     (await requestsDatabase.listPendingBookRequests()).length > 0 &&
     syncIsPending$.value === false
   ) {
-    syncPendingRequests();
+    // syncPendingRequests();
   }
 
   // if ((await requestsDatabase.listPendingBookRequests()).length === 0) {
