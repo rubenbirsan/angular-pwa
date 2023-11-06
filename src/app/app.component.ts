@@ -30,6 +30,8 @@ export class AppComponent {
     private restApiService: RestApiService,
     private restApiService1: RestApiService
   ) {
+    navigator.storage.persist();
+
     this.initStoragePersistence().then();
 
     localStorage.setItem('token', this.generateRandomName(20));
@@ -119,6 +121,9 @@ export class AppComponent {
   }
 
   async tryPersistWithoutPromtingUser() {
+    console.log(navigator);
+    console.log(navigator.permissions);
+
     if (!navigator.storage || !navigator.storage.persisted) {
       return 'never';
     }
