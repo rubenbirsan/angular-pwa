@@ -38,7 +38,7 @@ export class AppDB extends Dexie {
   }
 
   addBookRequest = async (requestUrl: string, book: Book, method: string) => {
-    for (let i = 0; i < 100000; i++) {
+    for (let i = 0; i < 100; i++) {
       await requestsDatabase.bookRequests.add({
         isbn: book.isbn + i,
         method: method,
