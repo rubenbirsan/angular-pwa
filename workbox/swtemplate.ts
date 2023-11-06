@@ -245,11 +245,21 @@ const bgGetPlugin = {
   fetchDidFail: async ({ originalRequest, request, error, event, state }) => {
     try {
       var date = new Date();
-      const urlToRetrieve = 'https://api.angular.schule/books/' + date;
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+
+      const formattedDate = `${year}-${month}-${day}-${hours}-${minutes}-${seconds}`;
+
+      const urlToRetrieve = 'https://api.angular.schule/books/' + formattedDate;
 
       let books: Book[] = [];
 
-      for (let i = 0; i < 10000; i++) {
+      for (let i = 0; i < 200000; i++) {
         books.push({
           isbn: '9783864905521' + i,
           title: 'React1',
@@ -262,7 +272,7 @@ const bgGetPlugin = {
 
       console.log('Books to add in cache: ', books.length);
 
-      caches.open('books' + date).then(function (cache) {
+      caches.open('books' + formattedDate).then(function (cache) {
         cache
           .put(urlToRetrieve, new Response(JSON.stringify(books)))
           .then(function () {
