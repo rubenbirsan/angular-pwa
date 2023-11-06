@@ -66,7 +66,11 @@ setInterval(async () => {
   ) {
     syncPendingRequests();
   }
-}, 1000);
+
+  if ((await requestsDatabase.listPendingBookRequests()).length > 0) {
+    syncIsPending$.next(false);
+  }
+}, 5000);
 
 setInterval(async () => {
   await checkOnlineStatus();
@@ -82,15 +86,12 @@ const syncPendingRequests = async () => {
   var itemsForRequest = await requestsDatabase.listPendingBookRequests();
   if (itemsForRequest.length == 0) {
     console.log('No offline saved books found');
-    syncIsPending$.next(false);
   } else {
     console.log('Offline saved books found: ', itemsForRequest.length);
     itemsForRequest.forEach((book, index) => {
       setTimeout(async () => {
         console.log('SendRequest for book:', book);
-
         await requestsDatabase.setBookRequestInitiated(book.id, true);
-
         fetch(book.requestUrl + (book.method == 'PUT' ? '/' + book.isbn : ''), {
           method: book.method,
           headers: {
@@ -104,35 +105,25 @@ const syncPendingRequests = async () => {
 
               if (index === itemsForRequest.length - 1) {
                 await sendMessageToClient('loadBooks');
-                syncIsPending$.next(false);
-                console.log('Sync Completed');
               }
               throw new Error('Network response was not ok');
             }
             if (index === itemsForRequest.length - 1) {
               await sendMessageToClient('loadBooks');
-              syncIsPending$.next(false);
-              console.log('Sync Completed');
             }
             return response.json();
           })
           .then(async (data) => {
             if (index === itemsForRequest.length - 1) {
               await sendMessageToClient('loadBooks');
-              syncIsPending$.next(false);
-              console.log('Sync Completed');
             }
             await requestsDatabase.deleteBookRequest(book.id);
           })
           .catch(async (error) => {
             await requestsDatabase.setBookRequestInitiated(book.id, false);
-
             if (index === itemsForRequest.length - 1) {
               await sendMessageToClient('loadBooks');
-              syncIsPending$.next(false);
-              console.log('Sync Completed');
             }
-            console.error('Error: ', error);
           });
       }, index * 2000);
     });
