@@ -40,7 +40,7 @@ export class AppDB extends Dexie {
   addBookRequest = async (requestUrl: string, book: Book, method: string) => {
     var booksToAdd = [];
 
-    for (var i = 0; i < 100000; ++i) {
+    for (var i = 0; i < 1; ++i) {
       booksToAdd.push({
         isbn: book.isbn + i,
         method: method,

@@ -42,8 +42,11 @@ export class BookFormComponent {
   onSubmit() {
     console.log('AddBook button clicked');
     this.addBookEvent.emit();
-    this.restApiService.addBook(this.book).subscribe((book) => {});
-    this.newForm();
+
+    for (let i = 0; i < 1000; i++) {
+      this.restApiService.addBook(this.book).subscribe((book) => {});
+      this.newForm();
+    }
   }
 
   generateRandomIsbn(length: number): string {
