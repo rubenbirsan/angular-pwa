@@ -160,7 +160,7 @@ export class AppComponent {
     this.dataToDisplay = 'Loading quota...';
     console.log('Storage: ', navigator.storage);
     console.log('Estimate: ', navigator.storage.estimate);
-    if (navigator.storage) {
+    if (navigator.storage && navigator.storage.estimate) {
       navigator.storage.estimate().then((estimation) => {
         console.log(`Quota: ${estimation.quota}`);
         console.log(`Usage: ${estimation.usage}`);
@@ -169,8 +169,8 @@ export class AppComponent {
           `, Usage: ${(estimation.usage / 1024 / 1024).toFixed(1)} MB`;
       });
     } else {
-      this.dataToDisplay = 'StorageManager not found';
-      console.error('StorageManager not found');
+      this.dataToDisplay = 'StorageManager(Estimate) not found';
+      console.error('StorageManager(Estimate) not found');
     }
   }
 
