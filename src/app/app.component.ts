@@ -26,6 +26,7 @@ export class AppComponent {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
   isOnline: boolean = false;
+  dataToDisplay: string = '';
   constructor(
     private restApiService: RestApiService,
     private restApiService1: RestApiService
@@ -95,6 +96,7 @@ export class AppComponent {
   getIndexedDbItems() {
     setTimeout(() => {
       this.restApiService.getIndexedDbItems().subscribe((res) => {
+        this.dataToDisplay = 'Data form IndexedDb: ' + res.length;
         console.log('Data form IndexedDb: ', res);
       });
     }, 10);
@@ -156,6 +158,9 @@ export class AppComponent {
       const estimation = await navigator.storage.estimate();
       console.log(`Quota: ${estimation.quota}`);
       console.log(`Usage: ${estimation.usage}`);
+      this.dataToDisplay =
+        `Quota: ${estimation.quota / 1024 / 1024} MB` +
+        `, Usage: ${estimation.usage / 1024 / 1024} MB`;
     } else {
       console.error('StorageManager not found');
     }
