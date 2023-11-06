@@ -116,6 +116,12 @@ const syncPendingRequests = async () => {
             return response.json();
           })
           .then(async (data) => {
+            console.log(
+              'Index: ',
+              index,
+              ', Items length: ',
+              itemsForRequest.length
+            );
             if (index === itemsForRequest.length - 1) {
               syncIsPending$.next(false);
               await sendMessageToClient('loadBooks');
