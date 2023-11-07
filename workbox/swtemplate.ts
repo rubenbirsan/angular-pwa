@@ -64,7 +64,7 @@ setInterval(async () => {
     (await requestsDatabase.listPendingBookRequests()).length > 0 &&
     syncIsPending$.value === false
   ) {
-    // syncPendingRequests();
+    syncPendingRequests();
   }
 
   // if ((await requestsDatabase.listPendingBookRequests()).length === 0) {
@@ -75,11 +75,6 @@ setInterval(async () => {
 setInterval(async () => {
   await checkOnlineStatus();
 }, 5000);
-// appIsOnline$.subscribe((isOnline) => {
-//   if (isOnline && !syncIsPending$.value) {
-//     syncPendingRequests();
-//   }
-// });
 
 const syncPendingRequests = async () => {
   syncIsPending$.next(true);
