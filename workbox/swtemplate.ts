@@ -398,7 +398,7 @@ registerRoute(
   ({ url }) => url.pathname.endsWith('/books'),
   new NetworkFirst({
     cacheName: 'books',
-    plugins: [bgGetPlugin],
+    // plugins: [bgGetPlugin],
   }),
   'GET'
 );
